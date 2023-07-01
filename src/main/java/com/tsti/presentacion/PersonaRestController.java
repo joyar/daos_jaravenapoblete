@@ -55,8 +55,8 @@ public class PersonaRestController {
 	
 	/**
 	 * Permite filtrar personas. 
-	 * Ej1 curl --location --request GET 'http://localhost:8081/personas?apellido=Perez&&nombre=Juan' Lista las personas llamadas Perez, Juan
-	 * Ej2 curl --location --request GET 'http://localhost:8081/personas?apellido=Perez' Lista aquellas personas de apellido PErez
+	 * Ej1 curl --location --request GET 'http://localhost:8081/personas?apellido=Gonzalez&&nombre=Martina' Lista las personas llamadas Perez, Juan
+	 * Ej2 curl --location --request GET 'http://localhost:8081/personas?apellido=Gonzalez' Lista aquellas personas de apellido PErez
 	 * Ej3 curl --location --request GET 'http://localhost:8081/personas'   Lista todas las personas
 	 * @param apellido
 	 * @param nombre
@@ -151,20 +151,21 @@ public class PersonaRestController {
 	
 	/**
 	 * Modifica una persona existente en la base de datos:
-	 * 			curl --location --request PUT 'http://localhost:8081/personas/27837176' 
+	 * 			curl --location --request PUT 'http://localhost:8081/personas/27837171' 
 	 *			--header 'Accept: application/json' 
 	 * 			--header 'Content-Type: application/json' 
 	 *			--data-raw '{
+	 *				"dni": 27837171,
 	 *			    "apellido": "Perez",
-	 *			    "nombre": "Juan Martin"
-	 *			    "idCiudad": 1
+	 *			    "nombre": "Juan Martin",
+	 *			    "idCiudad": 2
 	 *			}'
 	 * @param p Persona a modificar
 	 * @return Persona Editada o error en otro caso
 	 * @throws Excepcion 
 	 */
 	@PutMapping("/{dni}")
-	public ResponseEntity<Object>  actualizar(@RequestBody PersonaForm form, @PathVariable long dni) throws Exception
+	public ResponseEntity<Object>  actualizar(@RequestBody PersonaForm form, @PathVariable Long dni) throws Exception
 	{
 		Optional<Persona> rta = service.getById(dni);
 		if(!rta.isPresent())
@@ -181,7 +182,7 @@ public class PersonaRestController {
 //				return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("La ciudad indicada no se encuentra en la base de datos.");
 			
 			if(!p.getDni().equals(dni))//El dni es el identificador, con lo cual es el único dato que no permito modificar
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(getError("03", "Dato no editable", "Noi puede modificar el dni."));
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(getError("03", "Dato no editable", "No puede modificar el dni."));
 			service.update(p);
 			return ResponseEntity.ok(buildResponse(p));
 		}
